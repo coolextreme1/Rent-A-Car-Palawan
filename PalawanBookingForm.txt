@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Palawan Rent A Car – Booking Calculator</title>
+
+<style>
+  /* Responsive mobile-first app style */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+  :root{--bg:#0a0f1a;--card:#0f1724;--muted:#cbd5e1;--accent1:#2563eb;--accent2:#4f46e5;--ok:#4ade80}
+  html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system;background:linear-gradient(180deg,#05060a,#071025);color:#fff}
+  .wrap{max-width:980px;margin:8px auto;padding:12px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(90deg,#07102a,#081429);box-shadow:0 6px 24px rgba(0,0,0,.6)}
+  header h1{font-size:18px;margin:0}
+  header p{margin:0;font-size:12px;color:var(--muted)}
+  .card{background:var(--card);border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  input,select,textarea,button{font-size:15px;font-family:inherit}
+  select,input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.04);background:transparent;color:#fff;margin-bottom:12px;box-sizing:border-box}
+  textarea{min-height:64px;resize:vertical}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .col{flex:1;min-width:0}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .btn{flex:1;padding:12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+  .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff}
+  .btn-secondary{background:#334155;color:var(--muted)}
+  .btn-ws{background:#25D366;color:#043a2b}
+  .btn-vb{background:#665CAC;color:#fff}
+  .btn-call{background:#0b7285;color:#fff}
+  .result{display:none;padding:12px;border-radius:10px;margin-top:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03)}
+  .price{font-weight:800;color:var(--ok);font-size:18px;margin-top:8px}
+  footer{font-size:13px;color:var(--muted);text-align:center;margin-top:14px}
+  .small{font-size:13px;color:var(--muted)}
+  @media (max-width:520px){
+    header{flex-direction:column;align-items:flex-start}
+    .btns{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Palawan Rent A Car</h1>
+      <p>Booking Calculator — Pickup & Drop-off Date + Time (24-hour)</p>
+    </div>
+    <div class="small">WhatsApp/Viber/Call: +63 921 589 8563</div>
+  </header>
+
+  <div class="card" id="card">
+    <form id="bookingForm" onsubmit="return false;">
+      <!-- Contact -->
+      <label for="fullname">Full Name</label>
+      <input id="fullname" name="fullname" type="text" placeholder="Juan Dela Cruz">
+
+      <label for="contact">Contact Number</label>
+      <input id="contact" name="contact" type="tel" placeholder="+63XXXXXXXXXX">
+
+      <label for="email">Email Address <span class="small" style="color:#9ca3af">(required)</span></label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" required>
+
+      <!-- Vehicle -->
+      <label for="car">Select Vehicle</label>
+      <select id="car" name="car" onchange="updateRate()">
+        <option value="1500">Toyota Vios — ₱1,500 /day</option>
+        <option value="1500">Toyota Wigo — ₱1,500 /day</option>
+        <option value="1800">Toyota Innova M/T — ₱1,800 /day</option>
+        <option value="2800">Toyota Innova A/T — ₱2,800 /day</option>
+        <option value="3500">Fortuner / Montero / Terra — ₱3,500 /day</option>
+        <option value="4500">Ford Everest 4x4 — ₱4,500 /day</option>
+      </select>
+
+      <!-- Locations -->
+      <div class="row">
+        <div class="col">
+          <label for="pickup">Pickup Location</label>
+          <select id="pickup" name="pickup">
+            <option data-fee="0">Puerto Princesa (Free)</option>
+            <option data-fee="4500">El Nido (+ ₱4,500)</option>
+            <option data-fee="3500">Port Barton (+ ₱3,500)</option>
+            <option data-fee="5000">Lio Airport (+ ₱5,000)</option>
+            <option data-fee="1500">Sabang (+ ₱1,500)</option>
+            <option data-fee="1500">Astoria (+ ₱1,500)</option>
+            <option data-fee="5000">San Vicente (+ ₱5,000)</option>
+            <option data-fee="3000">Roxas (+ ₱3,000)</option>
+            <option data-fee="4500">Taytay (+ ₱4,500)</option>
+          </select>
+        </div>
+
+        <div class="col">
+          <label for="dropoff">Drop-off Location</label>
+          <select id="dropoff" name="dropoff">
+            <option data-fee="0">Puerto Princesa (Free)</option>
+            <option data-fee="4500">El Nido (+ ₱4,500)</option>
+            <option data-fee="3500">Port Barton (+ ₱3,500)</option>
+            <option data-fee="5000">Lio Airport (+ ₱5,000)</option>
+            <option data-fee="1500">Sabang (+ ₱1,500)</option>
+            <option data-fee="1500">Astoria (+ ₱1,500)</option>
+            <option data-fee="5000">San Vicente (+ ₱5,000)</option>
+            <option data-fee="3000">Roxas (+ ₱3,000)</option>
+            <option data-fee="4500">Taytay (+ ₱4,500)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dates & Times inline (Option 1) -->
+      <div class="row">
+        <div class="col">
+          <label for="pickup_date">Pickup Date</label>
+          <input id="pickup_date" name="pickup_date" type="date">
+        </div>
+        <div class="col">
+          <label for="pickup_time">Pickup Time (24h)</label>
+          <input id="pickup_time" name="pickup_time" type="time">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="drop_date">Drop-off Date</label>
+          <input id="drop_date" name="drop_date" type="date">
+        </div>
+        <div class="col">
+          <label for="drop_time">Drop-off Time (24h)</label>
+          <input id="drop_time" name="drop_time" type="time">
+        </div>
+      </div>
+
+      <label for="days">Number of Rental Days</label>
+      <input id="days" name="days" type="number" min="1" max="365" value="1">
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" placeholder="Flight number, instructions…"></textarea>
+
+      <div class="btns" role="group" aria-label="Actions">
+        <button type="button" class="btn btn-primary" onclick="calculateTotal()">Calculate</button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+        <button type="button" class="btn btn-primary" onclick="sendBooking()">Send Booking</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite"></div>
+
+      <div style="margin-top:10px" class="small">You can also use the quick contact buttons below.</div>
+      <div class="btns" style="margin-top:8px">
+        <button type="button" class="btn btn-ws" onclick="sendWhatsApp()">Send via WhatsApp</button>
+        <button type="button" class="btn btn-vb" onclick="sendViber()">Send via Viber</button>
+        <button type="button" class="btn btn-call" onclick="callNow()">Call Now</button>
+      </div>
+    </form>
+  </div>
+
+  <div style="margin-top:12px" class="card small">
+    <h3 style="margin:0 0 8px 0">Requirements & Delivery Fees</h3>
+    <ul style="margin:0 0 0 18px;color:var(--muted)">
+      <li>Full payment upon release of car</li>
+      <li>₱5,000 refundable deposit</li>
+      <li>Valid driver's license & ID</li>
+    </ul>
+    <h3 style="margin-top:12px">Delivery & Pickup Fees</h3>
+    <ul style="margin:0 0 0 18px;color:var(--muted)">
+      <li>Puerto Princesa – FREE</li>
+      <li>El Nido – ₱4,500</li>
+      <li>Port Barton – ₱3,500</li>
+      <li>Lio Airport – ₱5,000</li>
+      <li>Sabang – ₱1,500</li>
+      <li>Astoria – ₱1,500</li>
+      <li>San Vicente – ₱5,000</li>
+      <li>Roxas – ₱3,000</li>
+      <li>Taytay – ₱4,500</li>
+    </ul>
+  </div>
+
+  <footer>© Palawan Rent A Car · Email: palawanrentacar@gmail.com</footer>
+</div>
+
+<script>
+/* ---------- Configuration ---------- */
+// Your Apps Script Web App URL (the deployed doPost endpoint)
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzw8Rb_y_RuBLOTjY1ywYCUVBFM8JJaLDqeutvfEwgzidiJOxTI89IczfGaDmKcHwDe/exec";
+const DEPOSIT = 5000;
+let DAILY_RATE = 1500;
+const PHONE = "639215898563"; // for WhatsApp/Viber/Call
+
+/* ---------- Helpers ---------- */
+function $(id){return document.getElementById(id);}
+function updateRate(){ DAILY_RATE = parseInt($('car').value || "1500", 10); }
+
+/* calculate rental days from dates when possible, otherwise use days input */
+function computeDays(){
+  const d1 = $('pickup_date').value;
+  const d2 = $('drop_date').value;
+  const daysInput = parseInt($('days').value || "1", 10);
+  if (d1 && d2){
+    const dt1 = new Date(d1);
+    const dt2 = new Date(d2);
+    const diff = Math.ceil((dt2 - dt1) / (1000*60*60*24));
+    if (!isNaN(diff) && diff > 0) return diff;
+  }
+  return (daysInput && daysInput > 0) ? daysInput : 1;
+}
+
+/* compute totals including pickup & dropoff fees */
+function calculateTotal(){
+  updateRate();
+  const days = computeDays();
+  const rental = days * DAILY_RATE;
+  const pickupFee = parseInt($('pickup').selectedOptions[0].dataset.fee || "0", 10);
+  const dropoffFee = parseInt($('dropoff').selectedOptions[0].dataset.fee || "0", 10);
+  const total = rental + pickupFee + dropoffFee + DEPOSIT;
+
+  const result = $('result');
+  result.innerHTML = `
+    <strong>Rental Breakdown</strong><br>
+    Vehicle (${days} day${days>1?'s':''}): ₱${rental.toLocaleString()}<br>
+    Pickup Fee: ₱${pickupFee.toLocaleString()}<br>
+    Drop-off Fee: ₱${dropoffFee.toLocaleString()}<br>
+    Refundable Deposit: ₱${DEPOSIT.toLocaleString()}<br>
+    <div class="price">TOTAL: ₱${total.toLocaleString()}</div>
+  `;
+  result.style.display = 'block';
+  return { days, rental, pickupFee, dropoffFee, total };
+}
+
+/* reset form */
+function resetForm(){
+  $('bookingForm').reset();
+  $('result').style.display = 'none';
+  updateRate();
+}
+
+/* build a human message used by WhatsApp/Viber */
+function buildMessage(p){
+  // p is the totals object; if not provided, call calculateTotal()
+  if (!p) p = calculateTotal();
+  const name = $('fullname').value.trim() || '-';
+  const contact = $('contact').value.trim() || '-';
+  const email = $('email').value.trim() || '-';
+  const vehicle = $('car').selectedOptions[0].innerText.trim();
+  const pickupLoc = $('pickup').selectedOptions[0].innerText.trim();
+  const dropLoc = $('dropoff').selectedOptions[0].innerText.trim();
+  const pickupDate = $('pickup_date').value || '-';
+  const pickupTime = $('pickup_time').value || '-';
+  const dropDate = $('drop_date').value || '-';
+  const dropTime = $('drop_time').value || '-';
+  const notes = $('notes').value.trim() || '-';
+
+  return [
+    "*Car Rental Inquiry*",
+    `Name: ${name}`,
+    `Contact: ${contact}`,
+    `Email: ${email}`,
+    `Vehicle: ${vehicle}`,
+    `Pickup: ${pickupLoc}`,
+    `Pickup Date: ${pickupDate} ${pickupTime}`,
+    `Drop-off: ${dropLoc}`,
+    `Return Date: ${dropDate} ${dropTime}`,
+    `Days: ${p.days}`,
+    `Notes: ${notes}`,
+    `TOTAL: ₱${p.total.toLocaleString()}`
+  ].join("\n");
+}
+
+/* ---------- Contact actions ---------- */
+function sendWhatsApp(){
+  const p = calculateTotal();
+  const text = encodeURIComponent(buildMessage(p));
+  const api = "https://api.whatsapp.com/send?phone=" + PHONE + "&text=" + text;
+  const wa = "whatsapp://send?phone=" + PHONE + "&text=" + text;
+  // prefer deep link on mobile
+  const url = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? wa : api;
+  window.open(url, '_blank');
+}
+
+function sendViber(){
+  const p = calculateTotal();
+  const text = encodeURIComponent(buildMessage(p));
+  const vlink = "viber://forward?text=" + text; // try deep link
+  try { window.open(vlink, '_blank'); }
+  catch(e){ window.open('https://www.viber.com/', '_blank'); }
+}
+
+function callNow(){
+  window.location.href = "tel:+639215898563";
+}
+
+/* ---------- Send to Apps Script server (Save to Sheet + Email notify) ---------- */
+async function sendBooking(){
+  // validate required email
+  if (!$('email').value.trim()){
+    alert('Please enter a valid email address (required).');
+    $('email').focus();
+    return;
+  }
+
+  const totals = calculateTotal();
+  const payload = {
+    fullname: $('fullname').value.trim(),
+    contact: $('contact').value.trim(),
+    email: $('email').value.trim(),
+    vehicle: $('car').selectedOptions[0].innerText.trim(),
+    pickupLoc: $('pickup').selectedOptions[0].innerText.trim(),
+    dropoffLoc: $('dropoff').selectedOptions[0].innerText.trim(),
+    pickupDate: $('pickup_date').value || '',
+    pickupTime: $('pickup_time').value || '',
+    returnDate: $('drop_date').value || '',
+    dropoffTime: $('drop_time').value || '',
+    days: totals.days,
+    notes: $('notes').value.trim(),
+    total: totals.total
+  };
+
+  // show sending state
+  const resBox = $('result');
+  resBox.innerHTML = 'Sending booking...';
+  resBox.style.display = 'block';
+
+  try {
+    const resp = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) {
+      throw new Error('Server returned ' + resp.status);
+    }
+    const data = await resp.json().catch(()=>({}));
+    // success UI
+    resBox.innerHTML = '<strong>Booking saved and notification sent. Thank you!</strong>';
+  } catch (err) {
+    console.error(err);
+    resBox.innerHTML = '<strong>Failed to send booking. Please try the WhatsApp button or contact us directly.</strong>';
+    alert('Could not send booking automatically. Use WhatsApp or contact us. (See console for details.)');
+  }
+}
+
+/* ---------- Download filled form as HTML ---------- */
+function downloadFilled(){
+  const totals = calculateTotal();
+  const payload = {
+    fullname: $('fullname').value.trim(),
+    contact: $('contact').value.trim(),
+    email: $('email').value.trim(),
+    vehicle: $('car').selectedOptions[0].innerText.trim(),
+    pickupLoc: $('pickup').selectedOptions[0].innerText.trim(),
+    dropoffLoc: $('dropoff').selectedOptions[0].innerText.trim(),
+    pickupDate: $('pickup_date').value || '',
+    pickupTime: $('pickup_time').value || '',
+    returnDate: $('drop_date').value || '',
+    dropoffTime: $('drop_time').value || '',
+    days: totals.days,
+    notes: $('notes').value.trim(),
+    total: totals.total
+  };
+
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>Booking - ${payload.fullname}</title></head><body>
+  <h2>Palawan Rent A Car — Booking</h2>
+  <p><strong>Name:</strong> ${payload.fullname}</p>
+  <p><strong>Contact:</strong> ${payload.contact}</p>
+  <p><strong>Email:</strong> ${payload.email}</p>
+  <p><strong>Vehicle:</strong> ${payload.vehicle}</p>
+  <p><strong>Pickup:</strong> ${payload.pickupLoc} — ${payload.pickupDate} ${payload.pickupTime}</p>
+  <p><strong>Drop-off:</strong> ${payload.dropoffLoc} — ${payload.returnDate} ${payload.dropoffTime}</p>
+  <p><strong>Days:</strong> ${payload.days}</p>
+  <p><strong>Notes:</strong> ${payload.notes}</p>
+  <hr><h3>TOTAL: ₱${payload.total.toLocaleString()}</h3>
+  <p>Sent from Palawan Rent A Car booking page</p>
+  </body></html>`;
+
+  const blob = new Blob([html], {type: 'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'palawan-booking.html'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* Allow user to download via long-press on result area - attach a small button */
+(function init(){
+  updateRate();
+  // add a small "Download" link next to the result (optional)
+  const dl = document.createElement('button');
+  dl.textContent = 'Download Filled Form';
+  dl.className = 'btn btn-secondary';
+  dl.style.marginTop = '10px';
+  dl.onclick = downloadFilled;
+  document.querySelector('.card .btns').appendChild(dl);
+})();
+</script>
+</body>
+</html>
