@@ -2,97 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Palawan Rent A Car – Booking Calculator</title>
-<meta name="description" content="Palawan Rent A Car booking calculator — pickup/drop-off date & time, fees, WhatsApp & email integration." />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --bg:#071028; --card:#0e1724; --muted:#9fb0c8; --accent1:#2563eb; --accent2:#4f46e5;
-    --success:#4ade80; --danger:#ff6b6b; --glass: rgba(255,255,255,0.03);
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    background:linear-gradient(180deg,#02040a 0%, #071025 100%); color:#e6f0fb;
-    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  }
-  .wrap{max-width:1040px;margin:18px auto;padding:18px;}
-  header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border-radius:12px;
-    background:linear-gradient(90deg,#06102a,#071429); box-shadow:0 8px 30px rgba(2,6,23,.6)}
-  header .brand{display:flex;flex-direction:column}
-  header h1{margin:0;font-size:18px;letter-spacing:.2px}
-  header p{margin:0;font-size:13px;color:var(--muted)}
-  .layout{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:16px}
-  @media (max-width:900px){ .layout{grid-template-columns:1fr} }
-
-  /* Card */
-  .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 8px 30px rgba(2,6,23,.6);border:1px solid rgba(255,255,255,.02)}
-  h2{margin:0 0 8px 0;font-size:18px}
-  label{display:block;margin-bottom:6px;color:var(--muted);font-size:13px}
-  input,select,textarea,button{
-    font-family:inherit;font-size:15px;color:#eaf3ff;
-    background:transparent;border-radius:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.04);
-    outline:none;
-  }
-  textarea{min-height:84px;resize:vertical}
-  .row{display:flex;gap:10px;align-items:center}
+  /* Responsive mobile-first app style */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+  :root{--bg:#0a0f1a;--card:#0f1724;--muted:#cbd5e1;--accent1:#2563eb;--accent2:#4f46e5;--ok:#4ade80}
+  html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system;background:linear-gradient(180deg,#05060a,#071025);color:#fff}
+  .wrap{max-width:980px;margin:8px auto;padding:12px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(90deg,#07102a,#081429);box-shadow:0 6px 24px rgba(0,0,0,.6)}
+  header h1{font-size:18px;margin:0}
+  header p{margin:0;font-size:12px;color:var(--muted)}
+  .card{background:var(--card);border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  input,select,textarea,button{font-size:15px;font-family:inherit}
+  select,input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.04);background:transparent;color:#fff;margin-bottom:12px;box-sizing:border-box}
+  textarea{min-height:64px;resize:vertical}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
   .col{flex:1;min-width:0}
-  .muted{color:var(--muted);font-size:13px}
-  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .btn{cursor:pointer;border:none;padding:12px 14px;border-radius:10px;font-weight:700}
-  .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white}
-  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.05);color:var(--muted)}
-  .btn-ws{background:#25D366;color:#042b16}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .btn{flex:1;padding:12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+  .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff}
+  .btn-secondary{background:#334155;color:var(--muted)}
+  .btn-ws{background:#25D366;color:#043a2b}
   .btn-vb{background:#665CAC;color:#fff}
   .btn-call{background:#0b7285;color:#fff}
-  .result{margin-top:12px;padding:12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,.02)}
-  .price{font-weight:800;color:var(--success);font-size:18px;margin-top:8px}
-  .success-banner{display:none;margin-top:12px;padding:12px;border-radius:10px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.14);color:var(--success)}
-  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .result{display:none;padding:12px;border-radius:10px;margin-top:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03)}
+  .price{font-weight:800;color:var(--ok);font-size:18px;margin-top:8px}
+  footer{font-size:13px;color:var(--muted);text-align:center;margin-top:14px}
   .small{font-size:13px;color:var(--muted)}
-  .map-links a{display:inline-block;font-size:13px;color:#9fd1ff;text-decoration:underline;margin-right:8px}
-  footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
-
-  /* spacing tweaks for small screens */
   @media (max-width:520px){
     header{flex-direction:column;align-items:flex-start}
-    .field-grid{grid-template-columns:1fr}
-    .controls{flex-direction:column}
+    .btns{flex-direction:column}
   }
 </style>
 </head>
 <body>
 <div class="wrap">
-
   <header>
-    <div class="brand">
+    <div>
       <h1>Palawan Rent A Car</h1>
-      <p>Booking Calculator — professional & mobile friendly</p>
+      <p>Booking Calculator — Pickup & Drop-off Date + Time (24-hour)</p>
     </div>
     <div class="small">WhatsApp/Viber/Call: +63 921 589 8563</div>
   </header>
 
-  <div class="layout">
-    <!-- Main Form -->
-    <div class="card">
-      <h2>Booking Details</h2>
-
+  <div class="card" id="card">
+    <form id="bookingForm" onsubmit="return false;">
       <!-- Contact -->
       <label for="fullname">Full Name</label>
-      <input id="fullname" type="text" placeholder="Juan Dela Cruz">
+      <input id="fullname" name="fullname" type="text" placeholder="Juan Dela Cruz">
 
       <label for="contact">Contact Number</label>
-      <input id="contact" type="tel" placeholder="+63XXXXXXXXXX">
+      <input id="contact" name="contact" type="tel" placeholder="+63XXXXXXXXXX">
 
-      <label for="email">Email Address <span class="small" style="color:#9fb0c8"> (required)</span></label>
-      <input id="email" type="email" placeholder="you@example.com" required>
+      <label for="email">Email Address <span class="small" style="color:#9ca3af">(required)</span></label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" required>
 
       <!-- Vehicle -->
       <label for="car">Select Vehicle</label>
-      <select id="car" onchange="updateRate()">
+      <select id="car" name="car" onchange="updateRate()">
         <option value="1500">Toyota Vios — ₱1,500 /day</option>
         <option value="1500">Toyota Wigo — ₱1,500 /day</option>
         <option value="1800">Toyota Innova M/T — ₱1,800 /day</option>
@@ -102,10 +72,10 @@
       </select>
 
       <!-- Locations -->
-      <div style="margin-top:6px" class="field-grid">
-        <div>
+      <div class="row">
+        <div class="col">
           <label for="pickup">Pickup Location</label>
-          <select id="pickup">
+          <select id="pickup" name="pickup">
             <option data-fee="0">Puerto Princesa (Free)</option>
             <option data-fee="4500">El Nido (+ ₱4,500)</option>
             <option data-fee="3500">Port Barton (+ ₱3,500)</option>
@@ -117,9 +87,10 @@
             <option data-fee="4500">Taytay (+ ₱4,500)</option>
           </select>
         </div>
-        <div>
+
+        <div class="col">
           <label for="dropoff">Drop-off Location</label>
-          <select id="dropoff">
+          <select id="dropoff" name="dropoff">
             <option data-fee="0">Puerto Princesa (Free)</option>
             <option data-fee="4500">El Nido (+ ₱4,500)</option>
             <option data-fee="3500">Port Barton (+ ₱3,500)</option>
@@ -133,147 +104,89 @@
         </div>
       </div>
 
-      <!-- Dates & Times — inline with Dropdown times (Option A) -->
-      <div style="margin-top:8px" class="field-grid">
-        <div>
+      <!-- Dates & Times inline (Option 1) -->
+      <div class="row">
+        <div class="col">
           <label for="pickup_date">Pickup Date</label>
-          <input id="pickup_date" type="date">
+          <input id="pickup_date" name="pickup_date" type="date">
         </div>
-        <div>
-          <label for="pickup_time">Pickup Time</label>
-          <select id="pickup_time">
-            <!-- times in 30-min increments (AM/PM) -->
-            <script>
-              // placeholder — replaced by JS below if browser blocks inline script here
-            </script>
-          </select>
+        <div class="col">
+          <label for="pickup_time">Pickup Time (24h)</label>
+          <input id="pickup_time" name="pickup_time" type="time">
         </div>
+      </div>
 
-        <div>
+      <div class="row">
+        <div class="col">
           <label for="drop_date">Drop-off Date</label>
-          <input id="drop_date" type="date">
+          <input id="drop_date" name="drop_date" type="date">
         </div>
-        <div>
-          <label for="drop_time">Drop-off Time</label>
-          <select id="drop_time">
-            <script>
-              // placeholder — replaced by JS below if browser blocks inline script here
-            </script>
-          </select>
+        <div class="col">
+          <label for="drop_time">Drop-off Time (24h)</label>
+          <input id="drop_time" name="drop_time" type="time">
         </div>
       </div>
 
-      <div style="margin-top:8px" class="field-grid">
-        <div>
-          <label for="days">Number of Rental Days</label>
-          <input id="days" type="number" min="1" max="365" value="1">
-        </div>
-        <div>
-          <label for="notes">Notes (optional)</label>
-          <input id="notes" type="text" placeholder="Flight number, instructions...">
-        </div>
+      <label for="days">Number of Rental Days</label>
+      <input id="days" name="days" type="number" min="1" max="365" value="1">
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" placeholder="Flight number, instructions…"></textarea>
+
+      <div class="btns" role="group" aria-label="Actions">
+        <button type="button" class="btn btn-primary" onclick="calculateTotal()">Calculate</button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+        <button type="button" class="btn btn-primary" onclick="sendBooking()">Send Booking</button>
       </div>
 
-      <!-- Actions -->
-      <div class="controls" style="margin-top:12px">
-        <button class="btn btn-primary" onclick="handleCalculate()" type="button">Calculate</button>
-        <button class="btn btn-ghost" onclick="handleReset()" type="button">Reset</button>
-        <button class="btn btn-primary" onclick="handleSend()" type="button">Send Booking</button>
+      <div id="result" class="result" aria-live="polite"></div>
+
+      <div style="margin-top:10px" class="small">You can also use the quick contact buttons below.</div>
+      <div class="btns" style="margin-top:8px">
+        <button type="button" class="btn btn-ws" onclick="sendWhatsApp()">Send via WhatsApp</button>
+        <button type="button" class="btn btn-vb" onclick="sendViber()">Send via Viber</button>
+        <button type="button" class="btn btn-call" onclick="callNow()">Call Now</button>
       </div>
+    </form>
+  </div>
 
-      <div id="result" class="result" role="status" aria-live="polite" style="display:none"></div>
-      <div id="refBanner" class="success-banner" role="status" aria-live="polite"></div>
-
-      <!-- quick contact -->
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-ws" onclick="handleWhatsApp()" type="button">WhatsApp</button>
-        <button class="btn btn-vb" onclick="handleViber()" type="button">Viber</button>
-        <button class="btn btn-call" onclick="handleCall()" type="button">Call Now</button>
-        <button class="btn btn-ghost" onclick="downloadFilled()" type="button">Download Filled Form</button>
-      </div>
-    </div>
-
-    <!-- Side info -->
-    <aside class="card">
-      <h2>Info & Fees</h2>
-      <p class="small" style="margin-top:6px">Requirements</p>
-      <ul style="margin-top:6px;color:var(--muted);padding-left:18px">
-        <li>Full payment upon release of car</li>
-        <li>₱5,000 refundable security deposit</li>
-        <li>Valid driver’s license & ID</li>
-      </ul>
-
-      <h3 style="margin-top:12px">Delivery & Pickup Fees</h3>
-      <ul style="color:var(--muted);padding-left:18px">
-        <li>Puerto Princesa – FREE</li>
-        <li>El Nido – ₱4,500</li>
-        <li>Port Barton – ₱3,500</li>
-        <li>Lio Airport – ₱5,000</li>
-        <li>Sabang – ₱1,500</li>
-        <li>Astoria – ₱1,500</li>
-        <li>San Vicente – ₱5,000</li>
-        <li>Roxas – ₱3,000</li>
-        <li>Taytay – ₱4,500</li>
-      </ul>
-
-      <div style="margin-top:12px" class="map-links">
-        <p class="small">Quick map links</p>
-        <a href="https://www.google.com/maps/search/Puerto+Princesa" target="_blank" rel="noopener">Puerto Princesa</a><br>
-        <a href="https://www.google.com/maps/search/El+Nido+Palawan" target="_blank" rel="noopener">El Nido</a><br>
-        <a href="https://www.google.com/maps/search/Port+Barton" target="_blank" rel="noopener">Port Barton</a><br>
-        <a href="https://www.google.com/maps/search/San+Vicente+Palawan" target="_blank" rel="noopener">San Vicente</a>
-      </div>
-    </aside>
+  <div style="margin-top:12px" class="card small">
+    <h3 style="margin:0 0 8px 0">Requirements & Delivery Fees</h3>
+    <ul style="margin:0 0 0 18px;color:var(--muted)">
+      <li>Full payment upon release of car</li>
+      <li>₱5,000 refundable deposit</li>
+      <li>Valid driver's license & ID</li>
+    </ul>
+    <h3 style="margin-top:12px">Delivery & Pickup Fees</h3>
+    <ul style="margin:0 0 0 18px;color:var(--muted)">
+      <li>Puerto Princesa – FREE</li>
+      <li>El Nido – ₱4,500</li>
+      <li>Port Barton – ₱3,500</li>
+      <li>Lio Airport – ₱5,000</li>
+      <li>Sabang – ₱1,500</li>
+      <li>Astoria – ₱1,500</li>
+      <li>San Vicente – ₱5,000</li>
+      <li>Roxas – ₱3,000</li>
+      <li>Taytay – ₱4,500</li>
+    </ul>
   </div>
 
   <footer>© Palawan Rent A Car · Email: palawanrentacar@gmail.com</footer>
 </div>
 
 <script>
-/* ---------- CONFIG ---------- */
+/* ---------- Configuration ---------- */
+// Your Apps Script Web App URL (the deployed doPost endpoint)
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzw8Rb_y_RuBLOTjY1ywYCUVBFM8JJaLDqeutvfEwgzidiJOxTI89IczfGaDmKcHwDe/exec";
 const DEPOSIT = 5000;
 let DAILY_RATE = 1500;
-const PHONE = "639215898563"; // international format without + for whatsapp link
-let lastRef = ""; // last booking reference returned by server
+const PHONE = "639215898563"; // for WhatsApp/Viber/Call
 
-/* ---------- UTIL ---------- */
-function $(id){ return document.getElementById(id); }
-function formatCurrency(n){ return n.toLocaleString(); }
+/* ---------- Helpers ---------- */
+function $(id){return document.getElementById(id);}
+function updateRate(){ DAILY_RATE = parseInt($('car').value || "1500", 10); }
 
-/* ---------- build times dropdown (30-min increments) ---------- */
-function buildTimeOptions(selectEl){
-  const times = [];
-  const pad = (v)=>v.toString().padStart(2,'0');
-  for(let h=0; h<24; h++){
-    for(let m=0; m<60; m+=30){
-      const ampm = h<12 ? 'AM' : 'PM';
-      const hour12 = ((h+11)%12)+1;
-      const hh = pad(hour12);
-      const mm = pad(m);
-      times.push(`${hh}:${mm} ${ampm}`);
-    }
-  }
-  // populate
-  selectEl.innerHTML = times.map(t=>`<option>${t}</option>`).join('');
-}
-// populate both selects
-(function initTimes(){
-  try{
-    buildTimeOptions($('pickup_time'));
-    buildTimeOptions($('drop_time'));
-  }catch(e){
-    // ignore if DOM not ready
-    window.addEventListener('DOMContentLoaded', ()=>{ buildTimeOptions($('pickup_time')); buildTimeOptions($('drop_time')); });
-  }
-})();
-
-/* ---------- rates ---------- */
-function updateRate(){
-  DAILY_RATE = parseInt($('car').value || "1500", 10);
-}
-
-/* ---------- days calculation ---------- */
+/* calculate rental days from dates when possible, otherwise use days input */
 function computeDays(){
   const d1 = $('pickup_date').value;
   const d2 = $('drop_date').value;
@@ -284,35 +197,104 @@ function computeDays(){
     const diff = Math.ceil((dt2 - dt1) / (1000*60*60*24));
     if (!isNaN(diff) && diff > 0) return diff;
   }
-  return (daysInput && daysInput>0)?daysInput:1;
+  return (daysInput && daysInput > 0) ? daysInput : 1;
 }
 
-/* ---------- calculation ---------- */
-function calculate(){
+/* compute totals including pickup & dropoff fees */
+function calculateTotal(){
   updateRate();
   const days = computeDays();
   const rental = days * DAILY_RATE;
   const pickupFee = parseInt($('pickup').selectedOptions[0].dataset.fee || "0", 10);
-  const dropFee = parseInt($('dropoff').selectedOptions[0].dataset.fee || "0", 10);
-  const total = rental + pickupFee + dropFee + DEPOSIT;
+  const dropoffFee = parseInt($('dropoff').selectedOptions[0].dataset.fee || "0", 10);
+  const total = rental + pickupFee + dropoffFee + DEPOSIT;
 
-  const res = $('result');
-  res.innerHTML = `
+  const result = $('result');
+  result.innerHTML = `
     <strong>Rental Breakdown</strong><br>
-    Vehicle (${days} day${days>1?'s':''}): ₱${formatCurrency(rental)}<br>
-    Pickup Fee: ₱${formatCurrency(pickupFee)}<br>
-    Drop-off Fee: ₱${formatCurrency(dropFee)}<br>
-    Refundable Deposit: ₱${formatCurrency(DEPOSIT)}<br>
-    <div class="price">TOTAL: ₱${formatCurrency(total)}</div>
+    Vehicle (${days} day${days>1?'s':''}): ₱${rental.toLocaleString()}<br>
+    Pickup Fee: ₱${pickupFee.toLocaleString()}<br>
+    Drop-off Fee: ₱${dropoffFee.toLocaleString()}<br>
+    Refundable Deposit: ₱${DEPOSIT.toLocaleString()}<br>
+    <div class="price">TOTAL: ₱${total.toLocaleString()}</div>
   `;
-  res.style.display = 'block';
-  return { days, rental, pickupFee, dropFee, total };
+  result.style.display = 'block';
+  return { days, rental, pickupFee, dropoffFee, total };
 }
 
-/* ---------- collect form payload ---------- */
-function collectPayload(){
-  const totals = calculate();
-  return {
+/* reset form */
+function resetForm(){
+  $('bookingForm').reset();
+  $('result').style.display = 'none';
+  updateRate();
+}
+
+/* build a human message used by WhatsApp/Viber */
+function buildMessage(p){
+  // p is the totals object; if not provided, call calculateTotal()
+  if (!p) p = calculateTotal();
+  const name = $('fullname').value.trim() || '-';
+  const contact = $('contact').value.trim() || '-';
+  const email = $('email').value.trim() || '-';
+  const vehicle = $('car').selectedOptions[0].innerText.trim();
+  const pickupLoc = $('pickup').selectedOptions[0].innerText.trim();
+  const dropLoc = $('dropoff').selectedOptions[0].innerText.trim();
+  const pickupDate = $('pickup_date').value || '-';
+  const pickupTime = $('pickup_time').value || '-';
+  const dropDate = $('drop_date').value || '-';
+  const dropTime = $('drop_time').value || '-';
+  const notes = $('notes').value.trim() || '-';
+
+  return [
+    "*Car Rental Inquiry*",
+    `Name: ${name}`,
+    `Contact: ${contact}`,
+    `Email: ${email}`,
+    `Vehicle: ${vehicle}`,
+    `Pickup: ${pickupLoc}`,
+    `Pickup Date: ${pickupDate} ${pickupTime}`,
+    `Drop-off: ${dropLoc}`,
+    `Return Date: ${dropDate} ${dropTime}`,
+    `Days: ${p.days}`,
+    `Notes: ${notes}`,
+    `TOTAL: ₱${p.total.toLocaleString()}`
+  ].join("\n");
+}
+
+/* ---------- Contact actions ---------- */
+function sendWhatsApp(){
+  const p = calculateTotal();
+  const text = encodeURIComponent(buildMessage(p));
+  const api = "https://api.whatsapp.com/send?phone=" + PHONE + "&text=" + text;
+  const wa = "whatsapp://send?phone=" + PHONE + "&text=" + text;
+  // prefer deep link on mobile
+  const url = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? wa : api;
+  window.open(url, '_blank');
+}
+
+function sendViber(){
+  const p = calculateTotal();
+  const text = encodeURIComponent(buildMessage(p));
+  const vlink = "viber://forward?text=" + text; // try deep link
+  try { window.open(vlink, '_blank'); }
+  catch(e){ window.open('https://www.viber.com/', '_blank'); }
+}
+
+function callNow(){
+  window.location.href = "tel:+639215898563";
+}
+
+/* ---------- Send to Apps Script server (Save to Sheet + Email notify) ---------- */
+async function sendBooking(){
+  // validate required email
+  if (!$('email').value.trim()){
+    alert('Please enter a valid email address (required).');
+    $('email').focus();
+    return;
+  }
+
+  const totals = calculateTotal();
+  const payload = {
     fullname: $('fullname').value.trim(),
     contact: $('contact').value.trim(),
     email: $('email').value.trim(),
@@ -324,39 +306,12 @@ function collectPayload(){
     returnDate: $('drop_date').value || '',
     dropoffTime: $('drop_time').value || '',
     days: totals.days,
-    notes: $('notes').value.trim() || '',
+    notes: $('notes').value.trim(),
     total: totals.total
   };
-}
 
-/* ---------- handlers ---------- */
-function handleCalculate(){
-  calculate();
-  window.scrollTo({top: $('result').offsetTop, behavior:'smooth'});
-}
-function handleReset(){
-  $('fullname').value=''; $('contact').value=''; $('email').value=''; $('notes').value='';
-  $('days').value='1'; $('pickup_date').value=''; $('drop_date').value='';
-  $('pickup_time').selectedIndex = 0; $('drop_time').selectedIndex = 0;
-  $('result').style.display='none'; $('refBanner').style.display='none';
-  updateRate();
-}
-
-/* ---------- Send booking to Apps Script server ---------- */
-async function handleSend(){
-  // validate
-  const name = $('fullname').value.trim();
-  const email = $('email').value.trim();
-  const contact = $('contact').value.trim();
-  if (!name || !email || !contact){
-    alert('Please fill your Name, Email and Contact number (all required).');
-    return;
-  }
-
-  const payload = collectPayload();
+  // show sending state
   const resBox = $('result');
-  const refBox = $('refBanner');
-  refBox.style.display='none';
   resBox.innerHTML = 'Sending booking...';
   resBox.style.display = 'block';
 
@@ -367,90 +322,70 @@ async function handleSend(){
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-
-    if (!resp.ok) throw new Error('Server responded ' + resp.status);
-    const data = await resp.json();
-    if (!data || data.ok===false){
-      const err = data && data.error ? data.error : 'Server error';
-      throw new Error(err);
+    if (!resp.ok) {
+      throw new Error('Server returned ' + resp.status);
     }
-
-    lastRef = data.reference || '';
-    refBox.innerHTML = `<strong>Booking Sent Successfully!</strong><br>Reference ID: <span style="color:var(--success);font-weight:800">${lastRef}</span><br>Please keep this reference for follow-up.`;
-    refBox.style.display = 'block';
-    refBox.scrollIntoView({behavior:'smooth'});
-    resBox.innerHTML = '';
-
-    // optional: update result with ref included
-    const totals = calculate();
-    resBox.innerHTML = `<div style="margin-top:8px"><strong>Saved — Ref: ${lastRef}</strong></div>`;
-
-  } catch (err){
+    const data = await resp.json().catch(()=>({}));
+    // success UI
+    resBox.innerHTML = '<strong>Booking saved and notification sent. Thank you!</strong>';
+  } catch (err) {
     console.error(err);
-    resBox.innerHTML = `<strong style="color:var(--danger)">Failed to send booking.</strong><div class="small">Please use WhatsApp or call us if this persists.</div>`;
-    alert('Failed to send booking automatically. Try WhatsApp or call the number.');
+    resBox.innerHTML = '<strong>Failed to send booking. Please try the WhatsApp button or contact us directly.</strong>';
+    alert('Could not send booking automatically. Use WhatsApp or contact us. (See console for details.)');
   }
 }
 
-/* ---------- Messaging (WhatsApp, Viber, Call) ---------- */
-function buildMessageWithRef(ref){
-  const p = collectPayload();
-  const refText = ref || lastRef || 'Pending';
-  return [
-    "*Car Rental Inquiry*",
-    `Reference: ${refText}`,
-    `Name: ${p.fullname}`,
-    `Contact: ${p.contact}`,
-    `Email: ${p.email}`,
-    `Vehicle: ${p.vehicle}`,
-    `Pickup: ${p.pickupLoc}`,
-    `Pickup Date/Time: ${p.pickupDate} ${p.pickupTime}`,
-    `Drop-off: ${p.dropoffLoc}`,
-    `Return Date/Time: ${p.returnDate} ${p.dropoffTime}`,
-    `Days: ${p.days}`,
-    `Notes: ${p.notes}`,
-    `TOTAL: ₱${formatCurrency(p.total)}`
-  ].join('\n');
-}
-
-function handleWhatsApp(){
-  const msg = encodeURIComponent(buildMessageWithRef());
-  const url = (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) ? `whatsapp://send?phone=${PHONE}&text=${msg}` : `https://api.whatsapp.com/send?phone=${PHONE}&text=${msg}`;
-  window.open(url,'_blank');
-}
-
-function handleViber(){
-  const msg = encodeURIComponent(buildMessageWithRef());
-  const url = `viber://forward?text=${msg}`;
-  try{ window.open(url,'_blank'); } catch(e){ window.open('https://www.viber.com/','_blank'); }
-}
-function handleCall(){ window.location.href = 'tel:+63' + PHONE.replace(/^63/,''); }
-
-/* ---------- Download filled form ---------- */
+/* ---------- Download filled form as HTML ---------- */
 function downloadFilled(){
-  const p = collectPayload();
-  const html = `<!doctype html><html><head><meta charset="utf-8"><title>Booking - ${p.fullname}</title></head><body style="font-family:Arial,Helvetica,sans-serif;padding:20px;color:#111">
+  const totals = calculateTotal();
+  const payload = {
+    fullname: $('fullname').value.trim(),
+    contact: $('contact').value.trim(),
+    email: $('email').value.trim(),
+    vehicle: $('car').selectedOptions[0].innerText.trim(),
+    pickupLoc: $('pickup').selectedOptions[0].innerText.trim(),
+    dropoffLoc: $('dropoff').selectedOptions[0].innerText.trim(),
+    pickupDate: $('pickup_date').value || '',
+    pickupTime: $('pickup_time').value || '',
+    returnDate: $('drop_date').value || '',
+    dropoffTime: $('drop_time').value || '',
+    days: totals.days,
+    notes: $('notes').value.trim(),
+    total: totals.total
+  };
+
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>Booking - ${payload.fullname}</title></head><body>
   <h2>Palawan Rent A Car — Booking</h2>
-  <p><strong>Reference:</strong> ${lastRef || 'Pending'}</p>
-  <p><strong>Name:</strong> ${p.fullname}</p>
-  <p><strong>Contact:</strong> ${p.contact}</p>
-  <p><strong>Email:</strong> ${p.email}</p>
-  <p><strong>Vehicle:</strong> ${p.vehicle}</p>
-  <p><strong>Pickup:</strong> ${p.pickupLoc} — ${p.pickupDate} ${p.pickupTime}</p>
-  <p><strong>Drop-off:</strong> ${p.dropoffLoc} — ${p.returnDate} ${p.dropoffTime}</p>
-  <p><strong>Days:</strong> ${p.days}</p>
-  <p><strong>Notes:</strong> ${p.notes}</p>
-  <hr><h3>TOTAL: ₱${formatCurrency(p.total)}</h3>
-  <p>Generated from Palawan Booking Page</p>
+  <p><strong>Name:</strong> ${payload.fullname}</p>
+  <p><strong>Contact:</strong> ${payload.contact}</p>
+  <p><strong>Email:</strong> ${payload.email}</p>
+  <p><strong>Vehicle:</strong> ${payload.vehicle}</p>
+  <p><strong>Pickup:</strong> ${payload.pickupLoc} — ${payload.pickupDate} ${payload.pickupTime}</p>
+  <p><strong>Drop-off:</strong> ${payload.dropoffLoc} — ${payload.returnDate} ${payload.dropoffTime}</p>
+  <p><strong>Days:</strong> ${payload.days}</p>
+  <p><strong>Notes:</strong> ${payload.notes}</p>
+  <hr><h3>TOTAL: ₱${payload.total.toLocaleString()}</h3>
+  <p>Sent from Palawan Rent A Car booking page</p>
   </body></html>`;
-  const blob = new Blob([html], {type:'text/html'});
+
+  const blob = new Blob([html], {type: 'text/html'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'palawan-booking.html'; document.body.appendChild(a); a.click();
-  a.remove(); URL.revokeObjectURL(url);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'palawan-booking.html'; a.click();
+  URL.revokeObjectURL(url);
 }
 
-/* init */
-(function(){ updateRate(); })();
+/* Allow user to download via long-press on result area - attach a small button */
+(function init(){
+  updateRate();
+  // add a small "Download" link next to the result (optional)
+  const dl = document.createElement('button');
+  dl.textContent = 'Download Filled Form';
+  dl.className = 'btn btn-secondary';
+  dl.style.marginTop = '10px';
+  dl.onclick = downloadFilled;
+  document.querySelector('.card .btns').appendChild(dl);
+})();
 </script>
 </body>
 </html>
